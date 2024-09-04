@@ -18,7 +18,12 @@ go test -tags integration ./...
 
 ## Integration Testing with MongoDB
 ```bash
-go test --tags="integration mongo" ./...
+go test --tags="integration mongo" ./data
+```
+
+## Integration Testing with Postgres
+```bash
+go test -tags="integraion" ./data
 ```
 
 
