@@ -1,0 +1,35 @@
+
+
+services:
+  web-admin:
+    build: 
+      context: .
+      dockerfile: dockerfile.dev
+    environment:
+      DB_NAME: devdb      # Name of the database
+      DB_USER: devuser  # Username for Postgres
+      DB_PASSWORD: devpassword  # Password for Postgres
+      DB_PORT: 5432
+      DB_HOST: postgres
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+      
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+  
+  postgres:
+    image: postgres:latest  # Adding the Postgres image
+    environment:
+      DB_NAME: devdb      # Name of the database
+      DB_USER: devuser  # Username for Postgres
+      DB_PASSWORD: devpassword  # Password for Postgres
+
+    volumes:
+      - ./postgresdata:/var/lib/postgresql/data  # Persistent storage for Postgres
+    ports:
+      - "5432:5432"  # Expose PostgreSQL on port 5432 for local development
+

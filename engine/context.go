@@ -9,4 +9,6 @@ const (
 	ContextRequestStart
 	// ContextUserID holds the user id
 	ContextUserID
+	// Holds database data.DB
+	ContextDatabase
 )

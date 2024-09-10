@@ -6,11 +6,19 @@ import (
 	"net/http"
 
 	"github.com/NoCapCbas/webadmin/engine"
+	"github.com/NoCapCbas/webadmin/data"
 )
+
+func NewAPI() *API {
+	return &API{
+		Logger: engine.Logger,
+	}
+}
 
 // API is starting point of api
 // Responsible for routing and handling requests	k
 type API struct {
+	DB *data.DB
 	Logger func(http.Handler) http.Handler
 	User   *engine.Route
 }
@@ -19,6 +27,8 @@ type API struct {
 func (api *API) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	ctx = context.WithValue(ctx, engine.ContextOriginalPath, r.URL.Path)
+
+	ctx = context.WithValue(ctx, engine.ContextDatabase, api.DB)
 
 	var next *engine.Route
 	var head string
@@ -45,17 +55,6 @@ func newError(err error, statusCode int) *engine.Route {
 	}
 }
 
-func newUser() *engine.Route {
-	return &engine.Route{
-		Logger: true,
-		Handler: http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			engine.Respond(w, r, http.StatusOK, "User")
-		}),
-	}
-}
 
-func NewAPI() *API {
-	return &API{
-		Logger: engine.Logger,
-	}
-}
+
+
