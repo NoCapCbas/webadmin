@@ -24,9 +24,9 @@ services:
   postgres:
     image: postgres:latest  # Adding the Postgres image
     environment:
-      DB_NAME: devdb      # Name of the database
-      DB_USER: devuser  # Username for Postgres
-      DB_PASSWORD: devpassword  # Password for Postgres
+      POSTGRES_DB: devdb      # Name of the database
+      POSTGRES_USER: devuser  # Username for Postgres
+      POSTGRES_PASSWORD: devpassword  # Password for Postgres
 
     volumes:
       - ./postgresdata:/var/lib/postgresql/data  # Persistent storage for Postgres

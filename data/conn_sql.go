@@ -4,6 +4,7 @@ package data
 
 import (
 	"github.com/NoCapCbas/webadmin/data/model"
+ 	_ "github.com/NoCapCbas/webadmin/data/postgres"
 )
 
 func (db *DB) Open(driverName, dataSourceName string) error {
