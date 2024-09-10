@@ -12,9 +12,11 @@ services:
       DB_PORT: 5432
       DB_HOST: postgres
     ports:
-      - "8080:8080"
+      - "8081:8081"
     volumes:
       - .:/app
+    depends_on:
+      - postgres
       
   redis:
     image: redis:latest
@@ -27,7 +29,6 @@ services:
       POSTGRES_DB: devdb      # Name of the database
       POSTGRES_USER: devuser  # Username for Postgres
       POSTGRES_PASSWORD: devpassword  # Password for Postgres
-
     volumes:
       - ./postgresdata:/var/lib/postgresql/data  # Persistent storage for Postgres
     ports:

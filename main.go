@@ -30,10 +30,10 @@ func main() {
 
   if *env == "dev" {
     log.Println(*env)
-    // data.SeedDatabase(db.Connection)
+    data.SeedDatabase(db.Connection)
   }
 
-	if err := http.ListenAndServe(":8080", api); err != nil {
+	if err := http.ListenAndServe(":8081", api); err != nil {
 		log.Println(err)
 	}
 }

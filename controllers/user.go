@@ -39,41 +39,40 @@ func (u User) profile(w http.ResponseWriter, r *http.Request) {
 
 func (u User) detail(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-  id := ctx.Value(engine.ContextUserID).(int64)
-  db := ctx.Value(engine.ContextDatabase).(*data.DB)
-  // var ok bool
-  //
-  // // Retrieve the user ID from the context
-  // id := ctx.Value(engine.ContextUserID)
-  // if id == nil {
-  //     log.Println("User ID not found in context")
-  //     engine.Respond(w, r, http.StatusBadRequest, "Missing user ID")
-  //     return
-  // }
-  //
-  // // Assert that the userID is an int64
-  // id, ok = id.(int64)
-  // if !ok {
-  //     log.Printf("Invalid type for user ID: expected int64, got %T\n", id)
-  //     engine.Respond(w, r, http.StatusBadRequest, "Invalid user ID type")
-  //     return
-  // }
-  //
-  // // Retrieve the database from the context
-  // db := ctx.Value(engine.ContextDatabase)
-  // if db == nil {
-  //     log.Println("Database not found in context")
-  //     engine.Respond(w, r, http.StatusInternalServerError, "Database connection error")
-  //     return
-  // }
-  //
-  // // Assert that the db is of type *data.DB
-  // db, ok = db.(*data.DB)
-  // if !ok {
-  //     log.Printf("Invalid type for database connection: expected *data.DB, got %T\n", db)
-  //     engine.Respond(w, r, http.StatusInternalServerError, "Invalid database connection")
-  //     return
-  // }
+  // id := ctx.Value(engine.ContextUserID).(int64)
+  // db := ctx.Value(engine.ContextDatabase).(*data.DB)
+  var ok bool
+
+  // Retrieve the user ID from the context
+  idCtx := ctx.Value(engine.ContextUserID)
+  if idCtx == nil {
+      log.Println("User ID not found in context")
+      engine.Respond(w, r, http.StatusBadRequest, "Missing user ID")
+      return
+  }
+
+  // Assert that the userID is an int64
+  id, ok := idCtx.(int64)
+  if !ok {
+      log.Printf("Invalid type for user ID: expected int64, got %T\n", id)
+      engine.Respond(w, r, http.StatusBadRequest, "Invalid user ID type")
+      return
+  }
+
+  // Retrieve the database from the context
+  dbCtx := ctx.Value(engine.ContextDatabase)
+  if dbCtx == nil {
+      log.Println("Database not found in context")
+      engine.Respond(w, r, http.StatusInternalServerError, "Database connection error")
+      return
+  }
+
+  // Assert that the db is of type *data.DB
+  db, ok := dbCtx.(*data.DB)
+  if !ok {
+      engine.Respond(w, r, http.StatusInternalServerError, "Internal Server Error")
+      log.Fatalf("Invalid type for database connection: expected *data.DB, got %T\n", db)
+  }
 
 	var result = new(struct {
 		ID int64 `json:"user_id"`

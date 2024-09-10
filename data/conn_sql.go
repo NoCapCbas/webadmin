@@ -3,8 +3,9 @@
 package data
 
 import (
+  "log"
 	"github.com/NoCapCbas/webadmin/data/model"
- 	_ "github.com/NoCapCbas/webadmin/data/postgres"
+  "github.com/NoCapCbas/webadmin/data/postgres"
 )
 
 func (db *DB) Open(driverName, dataSourceName string) error {
@@ -12,6 +13,12 @@ func (db *DB) Open(driverName, dataSourceName string) error {
 	if err != nil {
 		return err
 	}
+  // initialize services 
+  db.Users = &postgres.Users{DB: conn}
+  if db.Users == nil {
+    log.Fatal("Failed to initialize UserServices")
+  }
+
 	// initialize the database
 	db.Connection = conn
 	return nil
