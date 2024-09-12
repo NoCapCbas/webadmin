@@ -6,18 +6,19 @@ services:
       context: .
       dockerfile: dockerfile.dev
     environment:
-      DB_NAME: devdb      # Name of the database
-      DB_USER: devuser  # Username for Postgres
-      DB_PASSWORD: devpassword  # Password for Postgres
-      DB_PORT: 5432
-      DB_HOST: postgres
+      DB_NAME: ${DB_NAME:-devdb}      # Name of the database
+      DB_USER: ${DB_USER:-devuser}  # Username for Postgres
+      DB_PASSWORD: ${DB_PASSWORD:-devpassword}  # Password for Postgres
+      DB_PORT: ${DB_PORT:-5432}
+      DB_HOST: ${DB_HOST:-postgres}
     ports:
-      - "8081:8081"
+      - ${PORT:-8080}:8080
     volumes:
       - .:/app
     depends_on:
       - postgres
-      
+      - redis
+
   redis:
     image: redis:latest
     ports:
@@ -26,9 +27,9 @@ services:
   postgres:
     image: postgres:latest  # Adding the Postgres image
     environment:
-      POSTGRES_DB: devdb      # Name of the database
-      POSTGRES_USER: devuser  # Username for Postgres
-      POSTGRES_PASSWORD: devpassword  # Password for Postgres
+      POSTGRES_DB: ${DB_NAME:-devdb}      # Name of the database
+      POSTGRES_USER: ${DB_USER:-devuser}  # Username for Postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-devpassword}  # Password for Postgres
     volumes:
       - ./postgresdata:/var/lib/postgresql/data  # Persistent storage for Postgres
     ports:
