@@ -10,8 +10,8 @@ import (
 )
 
 func main() {
-	dn := flag.String("driver", "postgres", "name of the database driver to use, postgres or mongo are supported")
-	ds := flag.String("datasource", "", "database connection string")
+	dn := flag.String("driver", "mongo", "name of the database driver to use, postgres or mongo are supported")
+	ds := flag.String("datasource", "mongodb://localhost:27017", "database connection string")
 	env := flag.String("env", "dev", "environment type, dev or prod")
 	port := flag.String("port", "8080", "port to listen on")
 	flag.Parse()

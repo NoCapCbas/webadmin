@@ -4,25 +4,16 @@ page: 56, 5.5 Get user detail example
 
 Runs app with hot reload via air
 ```bash
-./scripts/dev.sh
-```
-To make the script executable, use the chmod command:
-```shell
-chmod +x scripts/dev.sh
+make dev
 ```
 
 # Testing 
 For testing, make sure development docker containers are running
 If not, run the following command to start them
 ```bash
-./scripts/dev.sh
+make dev
 ```
 
-## Seed Data
-Seed data for postgres
-```bash
-docker exec -it <postgres-container-name> ./scripts/seed_data.sh
-```
 ## Unit Testing
 Once you have your project setup, you can run the following command to run all the unit tests:
 ```bash
@@ -45,12 +36,7 @@ go test -tags="integraion" ./data
 ```
 
 # Database
-Default database is postgres, if you want to use mongo, you can ...
+Default database is mongo.
 
 This code base is for educational purposes, 
 sourced from "build saas app in go" by dominic st-pierre
-
-
-
-# TODO
-[] add a way to insert seed data

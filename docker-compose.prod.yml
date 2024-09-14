@@ -1,0 +1,67 @@
+
+
+services:
+  web-admin:
+    image: ghcr.io/nocapcbas/web-admin:prod
+    env_file: .env.prod
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web-admin.rule=Host(`${HOST_DOMAIN}`)"
+      - "traefik.http.routers.web-admin.entrypoints=websecure"
+      - "traefik.http.routers.web-admin.tls.certresolver=myresolver"
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: always   
+    ports:
+      - ${PORT:-8080}:8080
+    depends_on:
+      - postgres
+      - redis
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+  
+  mongodb:
+    image: mongo:latest  # Using the MongoDB image
+    env_file: .env.dev
+    environment:
+      MONGO_INITDB_DATABASE: ${DB_NAME:-test}      # Name of the database
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER:-test}  # Username for MongoDB
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD:-test}  # Password for MongoDB
+    volumes:
+      - ./mongodata:/data/db  # Persistent storage for MongoDB
+    ports:
+      - "27017:27017"  # Expose MongoDB on port 27017 for local development
+
+  watchtower:
+    image: containrrr/watchtower
+    command:
+      - "--label-enable"
+      - "--interval"
+      - "30"
+      - "--rolling-restart"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  reverse-proxy:
+    image: traefik:v3.1
+    command:
+      - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=${DEV_EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+
+volumes:
+  letsencrypt:

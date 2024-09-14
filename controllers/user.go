@@ -1,9 +1,11 @@
 package controllers
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/NoCapCbas/webadmin/data"
@@ -27,18 +29,28 @@ func (u User) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		u.profile(w, r)
 		return
 	} else if head == "detail" {
-		u.detail(w, r)
+		head, _ = engine.ShiftPath(r.URL.Path)
+		i, err := strconv.ParseInt(head, 10, 64)
+		if err != nil {
+			log.Println("Invalid user ID")
+			engine.Respond(w, r, http.StatusBadRequest, "Invalid user ID")
+			return
+		}
+		ctx := r.Context()
+		ctx = context.WithValue(ctx, engine.ContextUserID, i)
+		u.detail(w, r.WithContext(ctx))
 		return
 	}
 	newError(fmt.Errorf("path not found"), http.StatusNotFound).Handler.ServeHTTP(w, r)
 }
 
 func (u User) profile(w http.ResponseWriter, r *http.Request) {
-	engine.Respond(w, r, http.StatusOK, "viewing profile")
+	engine.Respond(w, r, http.StatusOK, "viewing user profile")
 }
 
 func (u User) detail(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	// log.Println(ctx)
 	// id := ctx.Value(engine.ContextUserID).(int64)
 	// db := ctx.Value(engine.ContextDatabase).(*data.DB)
 	var ok bool

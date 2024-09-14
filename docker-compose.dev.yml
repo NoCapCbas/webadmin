@@ -5,12 +5,7 @@ services:
     build: 
       context: .
       dockerfile: dockerfile.dev
-    environment:
-      DB_NAME: ${DB_NAME:-devdb}      # Name of the database
-      DB_USER: ${DB_USER:-devuser}  # Username for Postgres
-      DB_PASSWORD: ${DB_PASSWORD:-devpassword}  # Password for Postgres
-      DB_PORT: ${DB_PORT:-5432}
-      DB_HOST: ${DB_HOST:-postgres}
+    env_file: .env.dev
     ports:
       - ${PORT:-8080}:8080
     volumes:
@@ -24,14 +19,14 @@ services:
     ports:
       - "6379:6379"
   
-  postgres:
-    image: postgres:latest  # Adding the Postgres image
+  mongodb:
+    image: mongo:latest  # Using the MongoDB image
+    env_file: .env.dev
     environment:
-      POSTGRES_DB: ${DB_NAME:-devdb}      # Name of the database
-      POSTGRES_USER: ${DB_USER:-devuser}  # Username for Postgres
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-devpassword}  # Password for Postgres
+      MONGO_INITDB_DATABASE: ${DB_NAME:-dev}      # Name of the database
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER:-dev}  # Username for MongoDB
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD:-dev}  # Password for MongoDB
     volumes:
-      - ./postgresdata:/var/lib/postgresql/data  # Persistent storage for Postgres
+      - ./mongodata:/data/db  # Persistent storage for MongoDB
     ports:
-      - "5432:5432"  # Expose PostgreSQL on port 5432 for local development
-
+      - ${DB_PORT:-27017}:27017  # Expose MongoDB on port 27017 for local development

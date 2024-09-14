@@ -14,7 +14,7 @@ RUN go mod download
 COPY . .
 
 # Build the application
-RUN go build -o main ./main.go
+RUN go build -o main ./cmd
 
 # Use a minimal alpine image for the final stage
 FROM alpine:3.14

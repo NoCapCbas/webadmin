@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/NoCapCbas/webadmin/engine"
 	"github.com/NoCapCbas/webadmin/data"
+	"github.com/NoCapCbas/webadmin/engine"
 )
 
 func NewAPI() *API {
@@ -18,7 +18,7 @@ func NewAPI() *API {
 // API is starting point of api
 // Responsible for routing and handling requests	k
 type API struct {
-	DB *data.DB
+	DB     *data.DB
 	Logger func(http.Handler) http.Handler
 	User   *engine.Route
 }
@@ -26,8 +26,9 @@ type API struct {
 // ServeHTTP is the entry point for all requests
 func (api *API) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	// set original path
 	ctx = context.WithValue(ctx, engine.ContextOriginalPath, r.URL.Path)
-
+	// set database
 	ctx = context.WithValue(ctx, engine.ContextDatabase, api.DB)
 
 	var next *engine.Route
@@ -54,7 +55,3 @@ func newError(err error, statusCode int) *engine.Route {
 		}),
 	}
 }
-
-
-
-
