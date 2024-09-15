@@ -7,5 +7,5 @@ import (
 )
 
 func TestFailed(t *testing.T) {
-	t.Error("integration test failed")
+	t.Error("integration failed")
 }

@@ -6,15 +6,9 @@ import (
 	"net/http"
 )
 
-// ParseBody parses the body of the request into a struct
-func ParseBody(body io.ReadCloser, result interface{}) error {
-	decoder := json.NewDecoder(body)
-	return decoder.Decode(result)
-}
-
 // Respond return an object with specific status as JSON
 func Respond(w http.ResponseWriter, r *http.Request, status int, data interface{}) error {
-	// change, error into a real JSON serializable object
+	// change error into a real JSON serializable object
 	if e, ok := data.(error); ok {
 		var tmp = new(struct {
 			Status string `json:"status"`
@@ -31,6 +25,12 @@ func Respond(w http.ResponseWriter, r *http.Request, status int, data interface{
 		return err
 	}
 
+	// write the request ID
+	reqID, ok := r.Context().Value(ContextRequestID).(string)
+	if ok {
+		w.Header().Set("X-Request-ID", reqID)
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	w.Write(js)
@@ -38,4 +38,10 @@ func Respond(w http.ResponseWriter, r *http.Request, status int, data interface{
 	logRequest(r, status)
 
 	return nil
+}
+
+// ParseBody parses the request body into a struct
+func ParseBody(body io.ReadCloser, result interface{}) error {
+	decoder := json.NewDecoder(body)
+	return decoder.Decode(result)
 }

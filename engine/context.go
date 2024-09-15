@@ -3,12 +3,18 @@ package engine
 type key int
 
 const (
-	// ContextOriginalPath holds the original requrest URL
+	// ContextOriginalPath holds the original request URL
 	ContextOriginalPath key = iota
-	// ContextRequestStart holds the time when the request was received
+	// ContextRequestStart holds the request start time
 	ContextRequestStart
-	// ContextUserID holds the user id
-	ContextUserID
-	// Holds database data.DB
+	// ContextDatabase holds a reference to a data.DB database connection and services
 	ContextDatabase
+	// ContextAuth holds the authenticated user account id and user id
+	ContextAuth
+	// ContextMinimumRole holds the minimum role to access this resource
+	ContextMinimumRole
+	// ContextRequestID unique ID for each request
+	ContextRequestID
+	// ContextRequestDump holds the request data
+	ContextRequestDump
 )

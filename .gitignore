@@ -1,5 +1,10 @@
 .env
 tmp/
 postgresdata/
+mongodata/
 .DS_Store
+
+queue/tasks.cron
+*.exe
+*.out
 

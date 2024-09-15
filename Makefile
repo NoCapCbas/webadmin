@@ -15,6 +15,11 @@ dev:
 test:
 	$(DOCKER_COMPOSE) -f docker-compose.dev.yml exec web-admin go test ./...
 
+# Run tests within development environment
+test-mongo:
+	$(DOCKER_COMPOSE) -f docker-compose.dev.yml exec web-admin go test ./data/mongo
+
+
 # Production
 prod:
 	$(DOCKER_COMPOSE) -f docker-compose.prod.yml up -d --build --force-recreate

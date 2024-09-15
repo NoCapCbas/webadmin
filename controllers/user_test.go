@@ -1,3 +1,5 @@
+//go:build mem
+
 package controllers
 
 import (
@@ -13,6 +15,6 @@ func Test_UserProfile_Handler(t *testing.T) {
 
 	rec := executeRequest(req)
 	if status := rec.Code; status != http.StatusOK {
-		t.Errorf("handler returned wrong status code: got %v want %v", status, http.StatusOK)
+		t.Errorf("returns status %v was expecting %v", status, http.StatusOK)
 	}
 }
